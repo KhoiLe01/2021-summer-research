@@ -1,4 +1,18 @@
 import random
+import math
+
+def SET(machines, jobs, c):
+    m = len(machines) - 1
+    for item in jobs:
+        kj = 0
+        k = min(m, math.sqrt(item[0]/c))
+        if k == m:
+            kj = m
+        elif (item[0]/(math.floor(k))+(math.floor(k)-1)*c) <= (item[0]/(math.ceil(k))+(math.ceil(k)-1)*c):
+            kj = math.floor(k)
+        else:
+            kj = math.ceil(k)
+
 
 def LPT(machines, jobs):
     jobs.sort(key=lambda jobs: jobs[0], reverse=True)
@@ -30,8 +44,9 @@ def main(m, nj):
     for i in range(nj):
         jobs.append([random.randint(1,10)])
 
-    LPT(machines, jobs)
-    print(jobs)
-    print(machines)
+    # LPT(machines, jobs)
+    # print(jobs)
+    # print(machines)
 
 main(5,8)
+
