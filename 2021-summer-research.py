@@ -15,8 +15,12 @@ def SET(machines, jobs, c):
         machines.sort(key=lambda machines: machines[0])
         sj = machines[kj-1][0]
         for j in range(kj):
+            if machines[j][0] == 0:
+                machines[j].append(sj + (item[0]/(kj)+(kj-1)*c))
+            else:
+                machines[j].append(str(sj-machines[j][0]))
+                machines[j].append((item[0]/(kj)+(kj-1)*c))
             machines[j][0] = sj + (item[0]/(kj)+(kj-1)*c)
-
 
 def LPT(machines, jobs):
     jobs.sort(key=lambda jobs: jobs[0], reverse=True)
