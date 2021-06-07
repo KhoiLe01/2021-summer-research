@@ -12,15 +12,19 @@ def SET(machines, jobs, c):
             kj = math.floor(k)
         else:
             kj = math.ceil(k)
+        machines.sort(key=lambda machines: machines[0])
+        sj = machines[kj-1][0]
+        for j in range(kj):
+            machines[j][0] = sj + (item[0]/(kj)+(kj-1)*c)
 
 
 def LPT(machines, jobs):
     jobs.sort(key=lambda jobs: jobs[0], reverse=True)
-    min = machines[1][0]
-    index = 1
+    min = machines[0][0]
+    index = 0
     for item in jobs:
         min = machines[index][0]
-        for i in range (1, machines[0][0]+1):
+        for i in range (0, len(machines)):
             if machines[i][0] < min:
                 min = machines[i][0]
                 index = i
@@ -38,15 +42,17 @@ def insert_job(machine_list, job, machine_index):
     machine_list[machine_index][0] += job
 
 def main(m, nj):
-    machines = [[m]]
+    machines = []
     jobs = []
     for i in range(m):
         machines.append([0])
     for i in range(nj):
         jobs.append([random.randint(1,10)])
 
-    LPT(machines, jobs)
-    print(jobs)
+    # LPT(machines, jobs)
+    # print(jobs)
+    # print(machines)
+    SET(machines, jobs, 1)
     print(machines)
 
 main(5,8)
