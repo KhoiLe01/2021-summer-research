@@ -25,6 +25,7 @@ def LPT(machines, jobs):
                 min = machines[i][0]
                 index = i
         insert_job(machines, item[0], index)
+        machines[index].append(item[0])
 
 def makespan(machine_list):
     max = 0
@@ -44,9 +45,9 @@ def main(m, nj):
     for i in range(nj):
         jobs.append([random.randint(1,10)])
 
-    # LPT(machines, jobs)
-    # print(jobs)
-    # print(machines)
+    LPT(machines, jobs)
+    print(jobs)
+    print(machines)
 
 main(5,8)
 
