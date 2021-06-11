@@ -1,6 +1,22 @@
 import random
 import math
 
+def LS(machines, jobs):
+    min = machines[0][0]
+    index = 0
+    for index2, item in enumerate(jobs):
+        min = machines[index][0]
+        for i in range(0, len(machines)):
+            if machines[i][0] < min:
+                min = machines[i][0]
+                index = i
+        insert_job(machines, item[0], index)
+        machines[index].append([item[0], index2 + 1])
+    LS_makespan = makespan(machines)
+    for i in range(len(machines)):
+        machines[i] = machines[i][1:]
+    return LS_makespan
+
 def SET(machines, jobs, c):
     m = len(machines) - 1
     for index, item in enumerate(jobs):
@@ -60,13 +76,14 @@ def main(m, nj):
     for i in range(nj):
         jobs.append([random.randint(1,10)])
 
-    makespan = LPT(machines, jobs)
-    print(makespan)
-    for i in machines:
-        print(makespan_machines(i), i)
-    # SET(machines, jobs, 1)
+    # makespan = LPT(machines, jobs)
+    # print(makespan)
     # for i in machines:
-    #     print(i)
+    #     print(makespan_machines(i), i)
+    print(jobs)
+    LS(machines, jobs)
+    for i in machines:
+        print(i)
 
 main(5,8)
 
