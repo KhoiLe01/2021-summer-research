@@ -32,7 +32,7 @@ def visualization(machines, jobs):
     gnt.set_yticks(yticks)
     # Labelling tickes of y-axis
     gnt.set_yticklabels(ylabels)
-    print(yticks, ylabels)
+#     print(yticks, ylabels)
 #     fig.yticks([])  # Command for hiding y-axis
 
     # Setting graph attribute
@@ -42,16 +42,35 @@ def visualization(machines, jobs):
     counter = 0
 
     for i in range (len(machines)):
-        print(i)
         for j in range (len(machines[i])):
             gnt.broken_barh([(previous, machines[i][j][0])], ((i+1)*10, 9), facecolors =(color[machines[i][j][1]-1]), edgecolor = "black")
             previous = machines[i][j][0]
-            print(i,j)
-
         previous = 0
+
+#     for i in range (len(machines)):
+#         for j in range (len(machines[i])):
+#             if machines[i][j][1] != 0:
+#                 gnt.broken_barh([(previous, machines[i][j][0])], ((i+1)*10, 9), facecolors =(color[machines[i][j][1]-1]), edgecolor = "black")
+#                 previous = machines[i][j][0]
+#             else:
+#                 if int(float(machines[i][j][0])) != 0:
+#                     gnt.broken_barh([(previous, int(float(machines[i][j][0])))], ((i+1)*10, 9), facecolors = 'white', edgecolor = "black")
+#                     previous = int(float(machines[i][j][0]))
+#         previous = 0
+
+
+#     for i in range (len(machines)):
+#         for j in range (1,len(machines[i])):
+#             gnt.broken_barh([(previous, machines[i][j])], ((i+1)*10, 9), facecolors =(color[counter]), edgecolor = "black")
+#             previous = machines[i][j]
+#             print((i+1)*10)
+#             print(j)
+#             counter += 1
+#         previous = 0
 
     fig.set_size_inches(18.5, 10.5)
     plt.savefig("gantt2.png")
+
 
 def LS(machines, jobs):
     min = machines[0][0]
@@ -131,7 +150,7 @@ def main(m, nj):
     makespan = LPT(machines, jobs)
     print(jobs)
     print(machines)
-    visualization(machines, jobs)
+    # visualization(machines, jobs)
     # print(makespan)
     # for i in machines:
     #     print(makespan_machines(i), i)
