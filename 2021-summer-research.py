@@ -58,15 +58,7 @@ def visualization(machines, jobs):
                     previous += (float(machines[i][j][0]))
         previous = 0
 
-
-#     for i in range (len(machines)):
-#         for j in range (1,len(machines[i])):
-#             gnt.broken_barh([(previous, machines[i][j])], ((i+1)*10, 9), facecolors =(color[counter]), edgecolor = "black")
-#             previous = machines[i][j]
-#             print((i+1)*10)
-#             print(j)
-#             counter += 1
-#         previous = 0
+    plt.yticks([])
 
     fig.set_size_inches(18.5, 10.5)
     plt.savefig("gantt2.png")
@@ -147,7 +139,7 @@ def main(m, nj):
     for i in range(nj):
         jobs.append([random.randint(1,10)])
 
-    makespan = SET(machines, jobs, 1)
+    makespan = LPT(machines, jobs)
     print(jobs)
     for i in machines:
         print(i)
