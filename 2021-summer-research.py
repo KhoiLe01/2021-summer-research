@@ -41,22 +41,22 @@ def visualization(machines, jobs):
     previous = 0
     counter = 0
 
+    # for i in range (len(machines)):
+    #     for j in range (len(machines[i])):
+    #         gnt.broken_barh([(previous, machines[i][j][0])], ((i+1)*10, 9), facecolors =(color[machines[i][j][1]-1]), edgecolor = "black")
+    #         previous += machines[i][j][0]
+    #     previous = 0
+
     for i in range (len(machines)):
         for j in range (len(machines[i])):
-            gnt.broken_barh([(previous, machines[i][j][0])], ((i+1)*10, 9), facecolors =(color[machines[i][j][1]-1]), edgecolor = "black")
-            previous = machines[i][j][0]
+            if machines[i][j][1] != 0:
+                gnt.broken_barh([(previous, machines[i][j][0])], ((i+1)*10, 9), facecolors =(color[machines[i][j][1]-1]), edgecolor = "black")
+                previous += machines[i][j][0]
+            else:
+                if int(float(machines[i][j][0])) != 0:
+                    gnt.broken_barh([(previous, (float(machines[i][j][0])))], ((i+1)*10, 9), facecolors = 'white', edgecolor = "black")
+                    previous += (float(machines[i][j][0]))
         previous = 0
-
-#     for i in range (len(machines)):
-#         for j in range (len(machines[i])):
-#             if machines[i][j][1] != 0:
-#                 gnt.broken_barh([(previous, machines[i][j][0])], ((i+1)*10, 9), facecolors =(color[machines[i][j][1]-1]), edgecolor = "black")
-#                 previous = machines[i][j][0]
-#             else:
-#                 if int(float(machines[i][j][0])) != 0:
-#                     gnt.broken_barh([(previous, int(float(machines[i][j][0])))], ((i+1)*10, 9), facecolors = 'white', edgecolor = "black")
-#                     previous = int(float(machines[i][j][0]))
-#         previous = 0
 
 
 #     for i in range (len(machines)):
@@ -147,16 +147,17 @@ def main(m, nj):
     for i in range(nj):
         jobs.append([random.randint(1,10)])
 
-    makespan = LPT(machines, jobs)
+    makespan = SET(machines, jobs, 1)
     print(jobs)
-    print(machines)
-    # visualization(machines, jobs)
+    for i in machines:
+        print(i)
+    visualization(machines, jobs)
     # print(makespan)
     # for i in machines:
     #     print(makespan_machines(i), i)
-    print(jobs)
-    LS(machines, jobs)
-    for i in machines:
-        print(i)
+    # print(jobs)
+    # LS(machines, jobs)
+    # for i in machines:
+    #     print(i)
 
 main(5,8)
