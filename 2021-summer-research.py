@@ -53,7 +53,7 @@ def visualization(machines, jobs):
                 gnt.broken_barh([(previous, machines[i][j][0])], ((i+1)*10, 9), facecolors =(color[machines[i][j][1]-1]), edgecolor = "black")
                 previous += machines[i][j][0]
             else:
-                if int(float(machines[i][j][0])) != 0:
+                if (float(machines[i][j][0])) != 0:
                     gnt.broken_barh([(previous, (float(machines[i][j][0])))], ((i+1)*10, 9), facecolors = 'white', edgecolor = "black")
                     previous += (float(machines[i][j][0]))
         previous = 0
@@ -94,12 +94,12 @@ def SET(machines, jobs, c):
         machines.sort(key=lambda machines: machines[0])
         sj = machines[kj-1][0]
         for j in range(kj):
-            if machines[j][0] == 0:
-                machines[j].append([sj + (item[0]/(kj)+(kj-1)*c), index+1])
-            else:
-                machines[j].append([str(sj-machines[j][0]), 0])
-                machines[j].append([(item[0]/(kj)+(kj-1)*c), index+1])
-            machines[j][0] = sj + (item[0]/(kj)+(kj-1)*c)
+            # if machines[j][0] == 0:
+            #     machines[j].append([sj + (item[0]/(kj)+(kj-1)*c), index+1])
+            # else:
+            machines[j].append([str(sj-machines[j][0]), 0])
+            machines[j].append([(item[0]/(kj)+(kj-1)*c), index+1])
+            machines[j][0] = sj + (item[0] / (kj) + (kj - 1) * c)
     SET_makespan = makespan(machines)
     for i in range(len(machines)):
         machines[i] = machines[i][1:]
@@ -139,7 +139,7 @@ def main(m, nj):
     for i in range(nj):
         jobs.append([random.randint(1,10)])
 
-    makespan = LPT(machines, jobs)
+    makespan = SET(machines, jobs, 1)
     print(jobs)
     for i in machines:
         print(i)
