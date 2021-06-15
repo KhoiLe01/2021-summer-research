@@ -1,5 +1,57 @@
 import random
 import math
+import matplotlib.pyplot as plt
+import numpy as np
+
+def visualization(machines, jobs):
+
+    # Declaring a figure "gnt"
+    fig, gnt = plt.subplots()
+
+    # # Setting Y-axis limits
+    # gnt.set_ylim(0, 50)
+
+    # # Setting X-axis limits
+    # gnt.set_xlim(0, 160)
+
+    # Setting labels for x-axis and y-axis
+    gnt.set_xlabel('Processing Time')
+    gnt.set_ylabel('Machine')
+#
+    yticks = []
+    ylabels = []
+    for i in range (len(machines)):
+        yt = 15 * (i+1)
+        yl = i+1
+        ylabels.append(str(yl))
+        yticks.append(yt)
+
+    color = ["#"+''.join([random.choice('0123456789ABCDEF') for j in range(6)]) for i in range(len(jobs))]
+
+    # Setting ticks on y-axis
+    gnt.set_yticks(yticks)
+    # Labelling tickes of y-axis
+    gnt.set_yticklabels(ylabels)
+    print(yticks, ylabels)
+#     fig.yticks([])  # Command for hiding y-axis
+
+    # Setting graph attribute
+    gnt.grid(True)
+    # Declaring a bar in schedule
+    previous = 0
+    counter = 0
+
+    for i in range (len(machines)):
+        print(i)
+        for j in range (len(machines[i])):
+            gnt.broken_barh([(previous, machines[i][j][0])], ((i+1)*10, 9), facecolors =(color[machines[i][j][1]]), edgecolor = "black")
+            previous = machines[i][j][0]
+            print(i,j)
+
+        previous = 0
+
+    fig.set_size_inches(18.5, 10.5)
+    plt.savefig("gantt2.png")
 
 def LS(machines, jobs):
     min = machines[0][0]
@@ -76,7 +128,10 @@ def main(m, nj):
     for i in range(nj):
         jobs.append([random.randint(1,10)])
 
-    # makespan = LPT(machines, jobs)
+    makespan = LPT(machines, jobs)
+    print(jobs)
+    print(machines)
+    visualization(machines, jobs)
     # print(makespan)
     # for i in machines:
     #     print(makespan_machines(i), i)
@@ -86,4 +141,3 @@ def main(m, nj):
         print(i)
 
 main(5,8)
-
