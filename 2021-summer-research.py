@@ -44,7 +44,7 @@ def visualization(machines, jobs):
     for i in range (len(machines)):
         print(i)
         for j in range (len(machines[i])):
-            gnt.broken_barh([(previous, machines[i][j][0])], ((i+1)*10, 9), facecolors =(color[machines[i][j][1]]), edgecolor = "black")
+            gnt.broken_barh([(previous, machines[i][j][0])], ((i+1)*10, 9), facecolors =(color[machines[i][j][1]-1]), edgecolor = "black")
             previous = machines[i][j][0]
             print(i,j)
 
