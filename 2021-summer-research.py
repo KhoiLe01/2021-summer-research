@@ -8,12 +8,6 @@ def visualization(machines, jobs):
     # Declaring a figure "gnt"
     fig, gnt = plt.subplots()
 
-    # # Setting Y-axis limits
-    # gnt.set_ylim(0, 50)
-
-    # # Setting X-axis limits
-    # gnt.set_xlim(0, 160)
-
     # Setting labels for x-axis and y-axis
     gnt.set_xlabel('Processing Time')
     gnt.set_ylabel('Machine')
@@ -33,13 +27,11 @@ def visualization(machines, jobs):
     # Labelling tickes of y-axis
     gnt.set_yticklabels(ylabels)
 #     print(yticks, ylabels)
-#     fig.yticks([])  # Command for hiding y-axis
 
     # Setting graph attribute
     gnt.grid(True)
     # Declaring a bar in schedule
     previous = 0
-    counter = 0
 
     # for i in range (len(machines)):
     #     for j in range (len(machines[i])):
@@ -59,8 +51,8 @@ def visualization(machines, jobs):
         previous = 0
 
     plt.yticks([])
-
-    fig.set_size_inches(18.5, 10.5)
+    fig.set_size_inches(37, 21)
+    plt.show()
     plt.savefig("gantt2.png")
 
 
@@ -140,9 +132,7 @@ def main(m, nj):
         jobs.append([random.randint(1,10)])
 
     makespan = SET(machines, jobs, 1)
-    print(jobs)
-    for i in machines:
-        print(i)
+
     visualization(machines, jobs)
     # print(makespan)
     # for i in machines:
@@ -151,5 +141,7 @@ def main(m, nj):
     # LS(machines, jobs)
     # for i in machines:
     #     print(i)
-
-main(5,8)
+    print(jobs)
+    for i in machines:
+        print(i)
+main(5,80)
