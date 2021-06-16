@@ -1,11 +1,10 @@
 import random
 import math
 import matplotlib.pyplot as plt
-import numpy as np
 import colorsys
 import copy
 
-def visualization(machines, jobs):
+def visualization(machines, jobs, algo):
 
     # Declaring a figure "gnt"
     fig, gnt = plt.subplots()
@@ -13,7 +12,8 @@ def visualization(machines, jobs):
     # Setting labels for x-axis and y-axis
     gnt.set_xlabel('Processing Time')
     gnt.set_ylabel('Machine')
-#
+
+
     yticks = []
     ylabels = []
     for i in range (len(machines)):
@@ -61,8 +61,9 @@ def visualization(machines, jobs):
 
     plt.yticks([])
     fig.set_size_inches(37, 21)
+    plt.title(algo)
     plt.show()
-    plt.savefig("gantt2.png")
+    plt.savefig("{}.png".format(algo))
 
 
 def LS(machines, jobs):
@@ -147,11 +148,11 @@ def main(m, nj):
     makespan2 = LS(machines2, jobs)
     makespan3 = LPT(machines3, jobs)
 
-    visualization(machines, jobs)
-    visualization(machines2, jobs)
-    visualization(machines3, jobs)
+    visualization(machines, jobs, "SET Algorithm")
+    visualization(machines2, jobs, "LS Algorithm")
+    visualization(machines3, jobs, "LPT Algorithm")
 
-    
+
     # print(makespan)
     # for i in machines:
     #     print(makespan_machines(i), i)
