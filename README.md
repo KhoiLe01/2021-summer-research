@@ -1,2 +1,2 @@
 # 2021-summer-research
-Visualization program for various scheduling algorithms
+Visualization program for scheduling algorithms
