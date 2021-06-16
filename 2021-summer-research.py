@@ -2,6 +2,7 @@ import random
 import math
 import matplotlib.pyplot as plt
 import numpy as np
+import colorsys
 
 def visualization(machines, jobs):
 
@@ -19,7 +20,12 @@ def visualization(machines, jobs):
         yl = i+1
         ylabels.append(str(yl))
         yticks.append(yt)
-
+    # color = []
+    # for i in range (len(jobs)):
+    #     h,s,l = random.random(), 0.5 + random.random()/2.0, 0.4 + random.random()/5.0
+    #     r,g,b = [int(256*i) for i in colorsys.hls_to_rgb(h,l,s)]
+    #     color.append((r,g,b))
+    # print(color)
     color = ["#"+''.join([random.choice('0123456789ABCDEF') for j in range(6)]) for i in range(len(jobs))]
 
     # Setting ticks on y-axis
@@ -29,6 +35,7 @@ def visualization(machines, jobs):
 #     print(yticks, ylabels)
 
     # Setting graph attribute
+
     gnt.grid(True)
     # Declaring a bar in schedule
     previous = 0
@@ -144,4 +151,4 @@ def main(m, nj):
     print(jobs)
     for i in machines:
         print(i)
-main(5,80)
+main(100,8000)
