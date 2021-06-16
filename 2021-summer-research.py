@@ -5,8 +5,8 @@ import matplotlib.image as mpimg
 import colorsys
 import copy
 
-def visualization(machines, jobs, algo):
 
+def visualization(machines, jobs, algo):
     # Declaring a figure "gnt"
     fig, gnt = plt.subplots()
 
@@ -14,18 +14,17 @@ def visualization(machines, jobs, algo):
     gnt.set_xlabel('Processing Time')
     gnt.set_ylabel('Machine')
 
-
     yticks = []
     ylabels = []
-    for i in range (len(machines)):
-        yt = 15 * (i+1)
-        yl = i+1
+    for i in range(len(machines)):
+        yt = 15 * (i + 1)
+        yl = i + 1
         ylabels.append(str(yl))
         yticks.append(yt)
     color = []
-    for i in range (len(jobs)):
-        h,s,l = random.random(), 0.5 + random.random()/2.0, 0.4 + random.random()/5.0
-        r,g,b = [int(256*i) for i in colorsys.hls_to_rgb(h,l,s)]
+    for i in range(len(jobs)):
+        h, s, l = random.random(), 0.5 + random.random() / 2.0, 0.4 + random.random() / 5.0
+        r, g, b = [int(256 * i) for i in colorsys.hls_to_rgb(h, l, s)]
         c = '#%02x%02x%02x' % (r, g, b)
         color.append(c)
     # print(color)
@@ -35,7 +34,7 @@ def visualization(machines, jobs, algo):
     gnt.set_yticks(yticks)
     # Labelling tickes of y-axis
     gnt.set_yticklabels(ylabels)
-#     print(yticks, ylabels)
+    #     print(yticks, ylabels)
 
     # Setting graph attribute
 
@@ -49,14 +48,16 @@ def visualization(machines, jobs, algo):
     #         previous += machines[i][j][0]
     #     previous = 0
 
-    for i in range (len(machines)):
-        for j in range (len(machines[i])):
+    for i in range(len(machines)):
+        for j in range(len(machines[i])):
             if machines[i][j][1] != 0:
-                gnt.broken_barh([(previous, machines[i][j][0])], ((i+1)*10, 9), facecolors =(color[machines[i][j][1]-1]), edgecolor = "black")
+                gnt.broken_barh([(previous, machines[i][j][0])], ((i + 1) * 10, 9),
+                                facecolors=(color[machines[i][j][1] - 1]), edgecolor="black")
                 previous += machines[i][j][0]
             else:
                 if (float(machines[i][j][0])) != 0:
-                    gnt.broken_barh([(previous, (float(machines[i][j][0])))], ((i+1)*10, 9), facecolors = 'white', edgecolor = "black")
+                    gnt.broken_barh([(previous, (float(machines[i][j][0])))], ((i + 1) * 10, 9), facecolors='white',
+                                    edgecolor="black")
                     previous += (float(machines[i][j][0]))
         previous = 0
 
@@ -68,11 +69,37 @@ def visualization(machines, jobs, algo):
     # mpimg.imsave("{}.png".format(algo), fig)
 
 
-
+def evan(machines, jobs, c):
+    machines[0].append([jobs[0][0], 1])
+    high = 0
+    low = 1
+    for index2, item in enumerate(jobs):
+        if index2 == 0:
+            continue
+        if makespan_machines(machines[high]) + item[0] - makespan_machines(machines[low]) <= makespan_machines(
+                machines[low]):
+            machines[high].append([item[0], index2 + 1])
+        elif (item[0] / 2 + c > item[0]) or min(makespan_machines(machines[low]) + item[0],
+                                                makespan_machines(machines[high])) >= max(
+                makespan_machines(machines[low]) + item[0], makespan_machines(machines[high])) - min(
+                makespan_machines(machines[low]) + item[0], makespan_machines(machines[high])):
+            machines[low].append([item[0], index2 + 1])
+        else:
+            machines[low].append([str(makespan_machines(machines[high]) - makespan_machines(machines[low])), 0])
+            machines[low].append([item[0]/2+c, index2])
+            machines[high].append([item[0] / 2 + c, index2])
+        if makespan_machines(machines[0]) > makespan_machines(machines[1]):
+            high = 0
+            low = 1
+        else:
+            high = 1
+            low = 0
+        
 def LS(machines, jobs):
     min = machines[0][0]
     index = 0
     for index2, item in enumerate(jobs):
+        print(machines)
         min = machines[index][0]
         for i in range(0, len(machines)):
             if machines[i][0] < min:
@@ -85,30 +112,33 @@ def LS(machines, jobs):
         machines[i] = machines[i][1:]
     return LS_makespan
 
+
 def SET(machines, jobs, c):
     m = len(machines) - 1
     for index, item in enumerate(jobs):
         kj = 0
-        k = min(m, math.sqrt(item[0]/c))
+        k = min(m, math.sqrt(item[0] / c))
         if k == m:
             kj = m
-        elif (item[0]/(math.floor(k))+(math.floor(k)-1)*c) <= (item[0]/(math.ceil(k))+(math.ceil(k)-1)*c):
+        elif (item[0] / (math.floor(k)) + (math.floor(k) - 1) * c) <= (
+                item[0] / (math.ceil(k)) + (math.ceil(k) - 1) * c):
             kj = math.floor(k)
         else:
             kj = math.ceil(k)
         machines.sort(key=lambda machines: machines[0])
-        sj = machines[kj-1][0]
+        sj = machines[kj - 1][0]
         for j in range(kj):
             # if machines[j][0] == 0:
             #     machines[j].append([sj + (item[0]/(kj)+(kj-1)*c), index+1])
             # else:
-            machines[j].append([str(sj-machines[j][0]), 0])
-            machines[j].append([(item[0]/(kj)+(kj-1)*c), index+1])
+            machines[j].append([str(sj - machines[j][0]), 0])
+            machines[j].append([(item[0] / (kj) + (kj - 1) * c), index + 1])
             machines[j][0] = sj + (item[0] / (kj) + (kj - 1) * c)
     SET_makespan = makespan(machines)
     for i in range(len(machines)):
         machines[i] = machines[i][1:]
     return SET_makespan
+
 
 def LPT(machines, jobs):
     jobs.sort(key=lambda jobs: jobs[0], reverse=True)
@@ -116,25 +146,29 @@ def LPT(machines, jobs):
     index = 0
     for index2, item in enumerate(jobs):
         min = machines[index][0]
-        for i in range (0, len(machines)):
+        for i in range(0, len(machines)):
             if machines[i][0] < min:
                 min = machines[i][0]
                 index = i
         insert_job(machines, item[0], index)
-        machines[index].append([item[0], index2+1])
+        machines[index].append([item[0], index2 + 1])
     LPT_makespan = makespan(machines)
     for i in range(len(machines)):
         machines[i] = machines[i][1:]
     return LPT_makespan
 
+
 def makespan(machine_list):
     return max([machine_list[i][0] for i in range(len(machine_list))])
 
+
 def makespan_machines(machine):
-    return sum([machine[i][0] for i in range(len(machine))])
+    return sum([float(machine[i][0]) for i in range(len(machine))])
+
 
 def insert_job(machine_list, job, machine_index):
     machine_list[machine_index][0] += job
+
 
 def main(m, nj):
     machines = []
@@ -142,19 +176,20 @@ def main(m, nj):
     for i in range(m):
         machines.append([0])
     for i in range(nj):
-        jobs.append([random.randint(1,10)])
+        jobs.append([random.randint(1, 10)])
 
-    machines2 = copy.deepcopy(machines)
-    machines3 = copy.deepcopy(machines)  
+    machines_evan = [[], []]
 
-    makespan = SET(machines, jobs, 1)
-    makespan2 = LS(machines2, jobs)
-    makespan3 = LPT(machines3, jobs)
-
-    visualization(machines, jobs, "SET Algorithm")
-    visualization(machines2, jobs, "LS Algorithm")
-    visualization(machines3, jobs, "LPT Algorithm")
-
+    # machines2 = copy.deepcopy(machines)
+    # machines3 = copy.deepcopy(machines)
+    # 
+    # makespan = SET(machines, jobs, 1)
+    # makespan2 = LS(machines2, jobs)
+    # makespan3 = LPT(machines3, jobs)
+    # 
+    # visualization(machines, jobs, "SET Algorithm")
+    # visualization(machines2, jobs, "LS Algorithm")
+    # visualization(machines3, jobs, "LPT Algorithm")
 
     # print(makespan)
     # for i in machines:
@@ -163,7 +198,11 @@ def main(m, nj):
     # LS(machines, jobs)
     # for i in machines:
     #     print(i)
+    evan(machines_evan, jobs, 2)
     print(jobs)
-    for i in machines:
+    for i in machines_evan:
         print(i)
-main(5,8)
+    visualization(machines_evan, jobs, "Evan algo")
+
+
+main(2, 8)
