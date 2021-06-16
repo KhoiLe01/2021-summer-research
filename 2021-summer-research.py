@@ -3,7 +3,6 @@ import math
 import matplotlib.pyplot as plt
 import numpy as np
 import colorsys
-
 def visualization(machines, jobs):
 
     # Declaring a figure "gnt"
@@ -20,13 +19,14 @@ def visualization(machines, jobs):
         yl = i+1
         ylabels.append(str(yl))
         yticks.append(yt)
-    # color = []
-    # for i in range (len(jobs)):
-    #     h,s,l = random.random(), 0.5 + random.random()/2.0, 0.4 + random.random()/5.0
-    #     r,g,b = [int(256*i) for i in colorsys.hls_to_rgb(h,l,s)]
-    #     color.append((r,g,b))
+    color = []
+    for i in range (len(jobs)):
+        h,s,l = random.random(), 0.5 + random.random()/2.0, 0.4 + random.random()/5.0
+        r,g,b = [int(256*i) for i in colorsys.hls_to_rgb(h,l,s)]
+        c = '#%02x%02x%02x' % (r, g, b)
+        color.append(c)
     # print(color)
-    color = ["#"+''.join([random.choice('0123456789ABCDEF') for j in range(6)]) for i in range(len(jobs))]
+    # color = ["#"+''.join([random.choice('0123456789ABCDEF') for j in range(6)]) for i in range(len(jobs))]
 
     # Setting ticks on y-axis
     gnt.set_yticks(yticks)
@@ -151,4 +151,4 @@ def main(m, nj):
     print(jobs)
     for i in machines:
         print(i)
-main(100,8000)
+main(100,800)
