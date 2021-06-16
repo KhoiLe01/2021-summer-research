@@ -1,6 +1,7 @@
 import random
 import math
 import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
 import colorsys
 import copy
 
@@ -64,6 +65,8 @@ def visualization(machines, jobs, algo):
     plt.title(algo)
     plt.show()
     plt.savefig("{}.png".format(algo))
+    # mpimg.imsave("{}.png".format(algo), fig)
+
 
 
 def LS(machines, jobs):
