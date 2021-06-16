@@ -3,6 +3,8 @@ import math
 import matplotlib.pyplot as plt
 import numpy as np
 import colorsys
+import copy
+
 def visualization(machines, jobs):
 
     # Declaring a figure "gnt"
@@ -138,9 +140,18 @@ def main(m, nj):
     for i in range(nj):
         jobs.append([random.randint(1,10)])
 
+    machines2 = copy.deepcopy(machines)
+    machines3 = copy.deepcopy(machines)  
+
     makespan = SET(machines, jobs, 1)
+    makespan2 = LS(machines2, jobs)
+    makespan3 = LPT(machines3, jobs)
 
     visualization(machines, jobs)
+    visualization(machines2, jobs)
+    visualization(machines3, jobs)
+
+    
     # print(makespan)
     # for i in machines:
     #     print(makespan_machines(i), i)
@@ -151,4 +162,4 @@ def main(m, nj):
     print(jobs)
     for i in machines:
         print(i)
-main(100,800)
+main(5,8)
