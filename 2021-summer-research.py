@@ -111,7 +111,33 @@ def evan_greedy(machines, jobs, c):
         else:
             high = 1
             low = 0
-        
+
+def evan_76(machines, jobs, c):
+    machines[0].append([jobs[0][0], 1])
+    high = 0
+    low = 1
+    job_sum = jobs[0][0]
+    for index2, item in enumerate(jobs):
+        if index2 == 0:
+            continue
+        job_sum += item[0]
+        if makespan_machines(machines[high]) + item[0] <= 7/12 * job_sum:
+            machines[high].append([item[0], index2+1])
+        elif max(makespan_machines(machines[low])+item[0], makespan_machines(machines[high])) <= 7/12 * job_sum:
+            machines[low].append([item[0], index2+1])
+        elif makespan_machines(machines[high]) + item[0]/2 + c <= 7/12 * job_sum:
+            machines[low].append([str(makespan_machines(machines[high]) - makespan_machines(machines[low])), 0])
+            machines[low].append([item[0] / 2 + c, index2 + 1])
+            machines[high].append([item[0] / 2 + c, index2 + 1])
+        else:
+            machines[low].append([item[0], index2+1])
+        if makespan_machines(machines[0]) > makespan_machines(machines[1]):
+            high = 0
+            low = 1
+        else:
+            high = 1
+            low = 0
+
 def LS(machines, jobs):
     min = machines[0][0]
     index = 0
@@ -174,13 +200,11 @@ def LPT(machines, jobs):
         machines[i] = machines[i][1:]
     return LPT_makespan
 
-
-def makespan(machine_list):
-    return max([machine_list[i][0] for i in range(len(machine_list))])
-
-
 def makespan_machines(machine):
     return sum([float(machine[i][0]) for i in range(len(machine))])
+
+def makespan(machine_list):
+    return max([makespan_machines(machine_list[i]) for i in range(len(machine_list))])
 
 
 def insert_job(machine_list, job, machine_index):
@@ -215,11 +239,41 @@ def main(m, nj):
     # LS(machines, jobs)
     # for i in machines:
     #     print(i)
-    evan_greedy(machines_evan, jobs, 2)
+
+    evan_76(machines_evan, jobs, 3)
     print(jobs)
     for i in machines_evan:
         print(i)
-    visualization(machines_evan, jobs, "Evan algo")
+    print(makespan(machines_evan)*2/sum([jobs[i][0] for i in range(len(jobs))]))
 
+    # visualization(machines_evan, jobs, "Evan algo")
 
-main(2, 8)
+def main_stimulation_2machines():
+    maxi = 0
+    max_jobs = []
+    c_max = 0
+    jobs_range = 0
+    no_job_max = 0
+    for j in range(100000):
+        nj = random.randint(20, 300)
+        jobs = []
+        jr = random.randint(10, 25)
+        for i in range(nj):
+            jobs.append([random.randint(1, jr)])
+        machines_evan = [[], []]
+        cr = random.randint(1, 8)
+        evan_76(machines_evan, jobs, cr)
+        k = makespan(machines_evan)*2/sum([jobs[i][0] for i in range(len(jobs))])
+        if k > maxi:
+            maxi = k
+            max_jobs = copy.deepcopy(jobs)
+            c_max = cr
+            jobs_range = jr
+            no_job_max = nj
+
+    print(maxi)
+    print(max_jobs)
+    print(c_max)
+    print(jobs_range)
+    print(no_job_max)
+main_stimulation_2machines()
