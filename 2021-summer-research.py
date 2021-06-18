@@ -86,8 +86,25 @@ def evan(machines, jobs, c):
             machines[low].append([item[0], index2 + 1])
         else:
             machines[low].append([str(makespan_machines(machines[high]) - makespan_machines(machines[low])), 0])
-            machines[low].append([item[0]/2+c, index2])
-            machines[high].append([item[0] / 2 + c, index2])
+            machines[low].append([item[0]/2+c, index2+1])
+            machines[high].append([item[0] / 2 + c, index2+1])
+        if makespan_machines(machines[0]) > makespan_machines(machines[1]):
+            high = 0
+            low = 1
+        else:
+            high = 1
+            low = 0
+
+def evan_greedy(machines, jobs, c):
+    low = 0
+    high = 1
+    for index2, item in enumerate(jobs):
+        if item[0]/2 + c < makespan_machines(machines[low]) + item[0]:
+            machines[low].append([str(makespan_machines(machines[high]) - makespan_machines(machines[low])), 0])
+            machines[low].append([item[0] / 2 + c, index2+1])
+            machines[high].append([item[0] / 2 + c, index2+1])
+        else:
+            machines[low].append([item[0]/2+c, index2+1])
         if makespan_machines(machines[0]) > makespan_machines(machines[1]):
             high = 0
             low = 1
@@ -198,7 +215,7 @@ def main(m, nj):
     # LS(machines, jobs)
     # for i in machines:
     #     print(i)
-    evan(machines_evan, jobs, 2)
+    evan_greedy(machines_evan, jobs, 2)
     print(jobs)
     for i in machines_evan:
         print(i)
