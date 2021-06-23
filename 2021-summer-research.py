@@ -117,6 +117,7 @@ def evan_76(machines, jobs, c):
     high = 0
     low = 1
     job_sum = jobs[0][0]
+    r4 = 0
     for index2, item in enumerate(jobs):
         if index2 == 0:
             continue
@@ -130,6 +131,7 @@ def evan_76(machines, jobs, c):
             machines[low].append([item[0] / 2 + c, index2 + 1])
             machines[high].append([item[0] / 2 + c, index2 + 1])
         else:
+            r4 += 1
             machines[low].append([item[0], index2+1])
         if makespan_machines(machines[0]) > makespan_machines(machines[1]):
             high = 0
@@ -137,6 +139,7 @@ def evan_76(machines, jobs, c):
         else:
             high = 1
             low = 0
+    return r4
 
 def LS(machines, jobs):
     min = machines[0][0]
@@ -254,15 +257,17 @@ def main_stimulation_2machines():
     c_max = 0
     jobs_range = 0
     no_job_max = 0
-    for j in range(100000):
-        nj = random.randint(20, 300)
+    no_r4 = 0
+    max_r4 = 0
+    for j in range(50000):
+        nj = random.randint(1000,2000)
         jobs = []
-        jr = random.randint(10, 25)
+        jr = random.randint(1,500)
         for i in range(nj):
             jobs.append([random.randint(1, jr)])
         machines_evan = [[], []]
-        cr = random.randint(1, 8)
-        evan_76(machines_evan, jobs, cr)
+        cr = random.randint(2000,3000)
+        no_r4 = evan_76(machines_evan, jobs, cr)
         k = makespan(machines_evan)*2/sum([jobs[i][0] for i in range(len(jobs))])
         if k > maxi:
             maxi = k
@@ -270,10 +275,30 @@ def main_stimulation_2machines():
             c_max = cr
             jobs_range = jr
             no_job_max = nj
+            max_r4 = no_r4
+            print(maxi, no_r4)
 
-    print(maxi)
+    print(maxi, max_r4)
     print(max_jobs)
     print(c_max)
     print(jobs_range)
     print(no_job_max)
 main_stimulation_2machines()
+
+# l = []
+# for i in range (1000):
+#     if i == 0:
+#         l.append([17])
+#     elif i == 1:
+#         l.append([16])
+#     else:
+#         l.append([1*sum([l[j][0] for j in range(i)])])
+# m = [[],[]]
+# print(evan_76(m, l, float('inf')))
+# print(l)
+# for i in (m):
+#     print(i)
+# avg = sum(l[i][0] for i in range(len(l)))
+# print(len(l))
+# print(makespan(m), avg)
+# print(makespan(m)*2/avg)
