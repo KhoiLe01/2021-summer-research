@@ -139,6 +139,7 @@ def evan_76(machines, jobs, c):
         else:
             high = 1
             low = 0
+        print(makespan(machines)*2/sum([makespan_machines(machines[0])+makespan_machines(machines[1])]))
     return r4
 
 def LS(machines, jobs):
@@ -283,18 +284,18 @@ def main_stimulation_2machines():
     print(c_max)
     print(jobs_range)
     print(no_job_max)
-main_stimulation_2machines()
+# main_stimulation_2machines()
 
+# c = 4
+# epsilon = 0.01
 # l = []
-# for i in range (1000):
+# for i in range (300):
 #     if i == 0:
-#         l.append([17])
-#     elif i == 1:
-#         l.append([16])
+#         l.append([12*c-epsilon])
 #     else:
-#         l.append([1*sum([l[j][0] for j in range(i)])])
+#         l.append([12*(6**i)*c-epsilon])
 # m = [[],[]]
-# print(evan_76(m, l, float('inf')))
+# print(evan_76(m, l, c))
 # print(l)
 # for i in (m):
 #     print(i)
@@ -302,3 +303,43 @@ main_stimulation_2machines()
 # print(len(l))
 # print(makespan(m), avg)
 # print(makespan(m)*2/avg)
+
+def find_counter(c):
+    epsilon = 0.0001*c
+    job = [[], []]
+    job[0].append(12*c-epsilon)
+    li = 0
+    si = 1
+    for i in range (500):
+        # print("Bound:", 7/5 * (sum(job[0])+sum(job[1])) - 12/5 * sum(job[si]), 12*sum(job[li]) + 12*c - 7*(sum(job[0])+sum(job[1])) - epsilon)
+        job[si].append(12*sum(job[li]) + 12*c - 7*(sum(job[0])+sum(job[1])) - epsilon)
+        if sum(job[0]) > sum(job[1]):
+            li = 0
+            si = 1
+        else:
+            si = 0
+            li = 1
+    # for i in (job):
+    #     print(i)
+    fin_job = []
+    for i in range(len(job[1])):
+        for j in range(len(job)):
+            fin_job.append([job[j][i]])
+    return fin_job
+
+max_approx = 0
+for c in range(4,5):
+    l = find_counter(c)
+    m = [[],[]]
+    print(evan_76(m, l, c))
+    print(l)
+    for i in (m):
+        print(i)
+    avg = sum(l[i][0] for i in range(len(l)))
+    print(len(l))
+    print(makespan(m), avg)
+    print(makespan(m)*2/avg)
+    if makespan(m)*2/avg > max_approx:
+        max_approx = makespan(m)*2/avg
+
+print(max_approx)
