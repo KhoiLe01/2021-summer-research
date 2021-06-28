@@ -338,14 +338,14 @@ for c in range(1,50):
     l = find_counter(c)
     m = [[],[]]
     print(evan_76(m, l, c))
-    print(len(l))
+    # print(len(l))
     for i in (m):
         print(i)
-    avg = sum(l[i][0] for i in range(len(l)))
-    print(len(l))
-    print(makespan(m), avg)
-    print(makespan(m)*2/avg)
-    if makespan(m)*2/avg > max_approx:
-        max_approx = makespan(m)*2/avg
+    avg = max(sum([l[i][0] for i in range(len(l))])/2, max([l[i][0] for i in range(len(l))]))
+    # print(len(l))
+    # print(makespan(m), avg)
+    # print(makespan(m)/avg)
+    if makespan(m)/avg > max_approx:
+        max_approx = makespan(m)/avg
 
 print(max_approx)
