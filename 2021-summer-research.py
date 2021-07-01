@@ -133,6 +133,9 @@ def evan_76(machines, jobs, c):
         else:
             r4 += 1
             machines[low].append([item[0], index2+1])
+            # machines[low].append([str(makespan_machines(machines[high]) - makespan_machines(machines[low])), 0])
+            # machines[low].append([item[0] / 2 + c, index2 + 1])
+            # machines[high].append([item[0] / 2 + c, index2 + 1])
         if makespan_machines(machines[0]) > makespan_machines(machines[1]):
             high = 0
             low = 1
@@ -311,19 +314,31 @@ def find_counter(c):
     li = 0
     si = 1
     for i in range (1000):
+        # print('a')
         # print("Bound:", 7/5 * (sum(job[0])+sum(job[1])) - 12/5 * sum(job[si]), 12*sum(job[li]) + 12*c - 7*(sum(job[0])+sum(job[1])) - epsilon)
-        k = 12 * sum(job[li]) + 12 * c - 7 * (sum(job[0]) + sum(job[1])) - epsilon
-        while epsilon/(12*sum(job[li]) + 12*c - 7*(sum(job[0])+sum(job[1])) - epsilon) < 10**(-10):
+        lower = 7/5 * (sum(job[0])+sum(job[1])) - 12/5 * sum(job[si])
+        # print('a1')
+        upper = 12 * sum(job[li]) + 12 * c - 7 * (sum(job[0]) + sum(job[1]))
+        # print('a2')
+        while epsilon/(upper) < 10**(-2):
             epsilon *= 10
-        if math.isnan(k):
+            # print(epsilon/upper)
+        # print('a3')
+        upper -= epsilon
+        lower += epsilon
+        k = lower + (upper - lower)*random.random()
+        # print(lower, upper, k)
+        # print(sum(job[li]))
+        if math.isnan(upper):
             break
-        job[si].append(12*sum(job[li]) + 12*c - 7*(sum(job[0])+sum(job[1])) - epsilon)
+        job[si].append(upper)
         if sum(job[0]) > sum(job[1]):
             li = 0
             si = 1
         else:
             si = 0
             li = 1
+        # print(sum(job[li])/ (max((sum(job[0]) + sum(job[1]))/2, max(job[li]))))
     # for i in (job):
     #     print(i)
     fin_job = []
@@ -334,18 +349,21 @@ def find_counter(c):
     return fin_job
 
 max_approx = 0
-for c in range(1,50):
+for c in range(1,100):
     l = find_counter(c)
     m = [[],[]]
-    print(evan_76(m, l, c))
+    evan_76(m, l, c)
     # print(len(l))
     for i in (m):
         print(i)
     avg = max(sum([l[i][0] for i in range(len(l))])/2, max([l[i][0] for i in range(len(l))]))
+    # avg = sum([l[i][0] for i in range(len(l))])/2
+
     # print(len(l))
     # print(makespan(m), avg)
     # print(makespan(m)/avg)
     if makespan(m)/avg > max_approx:
+        print(max_approx)
         max_approx = makespan(m)/avg
 
 print(max_approx)
