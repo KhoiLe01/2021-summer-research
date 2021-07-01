@@ -145,6 +145,35 @@ def evan_76(machines, jobs, c):
         # print(makespan(machines)*2/sum([makespan_machines(machines[0])+makespan_machines(machines[1])]))
     return r4
 
+def khoi12c(machines, jobs, c):
+    ij = 0
+    block = 0
+    const = 12
+    if jobs[0][0] <= 12*c + ij:
+        machines[0].append([jobs[0][0], 1])
+        ij = jobs[0][0]
+    else:
+        machines[0].append([str(jobs[0][0]/2 + c), 1])
+        machines[1].append([str(jobs[0][0]/2 + c), 1])
+        block += 1
+    high = 0
+    low = 1
+    for index, item in enumerate(jobs):
+        if index == 0:
+            continue
+        if item[0] <= const*c + ij:
+            machines[low].append([item[0], index+1])
+        else:
+            machines[low].append([str(makespan_machines(machines[high]) - makespan_machines(machines[low])), 0])
+            machines[low].append([item[0] / 2 + c, index + 1])
+            machines[high].append([item[0] / 2 + c, index + 1])
+        if makespan_machines(machines[0]) > makespan_machines(machines[1]):
+            high = 0
+            low = 1
+        else:
+            high = 1
+            low = 0
+
 def LS(machines, jobs):
     min = machines[0][0]
     index = 0
@@ -307,6 +336,12 @@ def main_stimulation_2machines():
 # print(makespan(m), avg)
 # print(makespan(m)*2/avg)
 
+def generate_random_jobs(n, range1):
+    job = []
+    for x in range (n):
+        job.append([random.randint(1, range1)])
+    return job
+
 def find_counter(c):
     epsilon = 0.0001*c
     job = [[], []]
@@ -350,14 +385,14 @@ def find_counter(c):
 
 max_approx = 0
 for c in range(1,100):
-    l = find_counter(c)
+    l = generate_random_jobs(1000, 250)
     m = [[],[]]
-    evan_76(m, l, c)
+    khoi12c(m, l, c)
     # print(len(l))
     for i in (m):
         print(i)
-    avg = max(sum([l[i][0] for i in range(len(l))])/2, max([l[i][0] for i in range(len(l))]))
-    # avg = sum([l[i][0] for i in range(len(l))])/2
+    # avg = max(sum([l[i][0] for i in range(len(l))])/2, max([l[i][0] for i in range(len(l))]))
+    avg = sum([l[i][0] for i in range(len(l))])/2
 
     # print(len(l))
     # print(makespan(m), avg)
