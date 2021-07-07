@@ -1,0 +1,1 @@
+& "c:/Lok/Side Projects/venv/Scripts/Activate.ps1"
