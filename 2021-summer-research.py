@@ -67,7 +67,7 @@ def visualization(machines, jobs, algo):
     plt.show()
     plt.savefig("{}.png".format(algo))
     # mpimg.imsave("{}.png".format(algo), fig)
-
+        
 
 def evan(machines, jobs, c):
     machines[0].append([jobs[0][0], 1])
@@ -149,7 +149,7 @@ def khoi12c(machines, jobs, c):
     ij = 0
     block = 0
     const = 12
-    if jobs[0][0] <= 12*c + ij:
+    if jobs[0][0] <= const*c + ij:
         machines[0].append([jobs[0][0], 1])
         ij = jobs[0][0]
     else:
@@ -163,10 +163,15 @@ def khoi12c(machines, jobs, c):
             continue
         if item[0] <= const*c + ij:
             machines[low].append([item[0], index+1])
+            if makespan_machines(machines[0]) > makespan_machines(machines[1]):
+                ij = makespan_machines(machines[0]) - makespan_machines(machines[1])
+            else:
+                ij = makespan_machines(machines[1]) - makespan_machines(machines[0])
         else:
             machines[low].append([str(makespan_machines(machines[high]) - makespan_machines(machines[low])), 0])
             machines[low].append([item[0] / 2 + c, index + 1])
             machines[high].append([item[0] / 2 + c, index + 1])
+            ij = 0
         if makespan_machines(machines[0]) > makespan_machines(machines[1]):
             high = 0
             low = 1
@@ -282,9 +287,11 @@ def main(m, nj):
         print(i)
     print(makespan(machines_evan)*2/sum([jobs[i][0] for i in range(len(jobs))]))
 
-    # visualization(machines_evan, jobs, "Evan algo")
+    visualization(machines_evan, jobs, "Evan algo")
+    
+# main(2, 15)
 
-def main_stimulation_2machines():
+def stimulation_2machines():
     maxi = 0
     max_jobs = []
     c_max = 0
@@ -316,7 +323,7 @@ def main_stimulation_2machines():
     print(c_max)
     print(jobs_range)
     print(no_job_max)
-# main_stimulation_2machines()
+# stimulation_2machines()
 
 # c = 4
 # epsilon = 0.01
@@ -383,22 +390,74 @@ def find_counter(c):
             fin_job.append([job[j][i]])
     return fin_job
 
-max_approx = 0
-for c in range(1,100):
-    l = generate_random_jobs(1000, 250)
-    m = [[],[]]
-    khoi12c(m, l, c)
-    # print(len(l))
-    for i in (m):
-        print(i)
-    # avg = max(sum([l[i][0] for i in range(len(l))])/2, max([l[i][0] for i in range(len(l))]))
-    avg = sum([l[i][0] for i in range(len(l))])/2
+def algo_finding_simulation_three_machines():
+    alpha = 0
+    beta = 0
+    c = 0
+    best_ratio = float('inf')
+    for i in range(1, 100):
+        for j in range(1,11):
+            for q in range(1, 1000):
+                machines = [[],[],[]]
+                makespan = [0,0,0]
+                jobs = generate_random_jobs(5000, 1000)
+                opt = sum([jobs[i][0] for i in range(len(jobs))])/3
+                max_machine = 0
+                min_machine = 1
+                med_machine = 2
+                for _ in range(len(jobs)):
+                    ij = makespan[max_machine] - makespan[med_machine] - makespan[min_machine]
+                    if jobs[_][0] <= i*q+j*ij:
+                        machines[min_machine].append([jobs[_][0], _+1])
+                        makespan[min_machine] += jobs[_][0]
 
-    # print(len(l))
-    # print(makespan(m), avg)
-    # print(makespan(m)/avg)
-    if makespan(m)/avg > max_approx:
-        print(max_approx)
-        max_approx = makespan(m)/avg
+                        max_machine = makespan.index(max(makespan))
+                        min_machine = makespan.index(min(makespan))
+                        med_machine = 3 - max_machine - min_machine
+                    else:
+                        machines[max_machine].append([jobs[_][0]/3+2*q, _+1])
+                        makespan[max_machine] += jobs[_][0]/3+2*q
 
-print(max_approx)
+                        machines[min_machine].append([str(makespan[max_machine]-makespan[min_machine]), 0])
+                        machines[med_machine].append([str(makespan[max_machine] - makespan[med_machine]), 0])
+
+                        max_machine = makespan.index(max(makespan))
+                        min_machine = makespan.index(min(makespan))
+                        med_machine = 3 - max_machine - min_machine
+
+                        makespan[med_machine] = makespan[max_machine]
+                        makespan[min_machine] = makespan[max_machine]
+
+
+                algo = max(makespan)
+                ratio = algo/opt
+                if ratio < best_ratio:
+                    best_ratio = ratio
+                    alpha = i
+                    beta = j
+                    c = q
+                    print(best_ratio, alpha, beta, c)
+
+    print(best_ratio, alpha, beta, c)
+
+algo_finding_simulation_three_machines()
+# max_approx = 0
+# for c in range(1,100):
+#     # l = generate_random_jobs(1000, 250)
+#     l = find_counter(c)
+#     m = [[],[]]
+#     khoi12c(m, l, c)
+#     # print(len(l))
+#     for i in (m):
+#         print(i)
+#     # avg = max(sum([l[i][0] for i in range(len(l))])/2, max([l[i][0] for i in range(len(l))]))
+#     avg = sum([l[i][0] for i in range(len(l))])/2
+# 
+#     # print(len(l))
+#     # print(makespan(m), avg)
+#     # print(makespan(m)/avg)
+#     if makespan(m)/avg > max_approx:
+#         print(max_approx)
+#         max_approx = makespan(m)/avg
+# 
+# print(max_approx)
