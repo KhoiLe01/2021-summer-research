@@ -398,44 +398,53 @@ def algo_finding_simulation_three_machines():
     for i in range(1, 100):
         for j in range(1,11):
             for q in range(1, 1000):
-                machines = [[],[],[]]
-                makespan = [0,0,0]
-                jobs = generate_random_jobs(5000, 1000)
-                opt = sum([jobs[i][0] for i in range(len(jobs))])/3
-                max_machine = 0
-                min_machine = 1
-                med_machine = 2
-                for _ in range(len(jobs)):
-                    ij = makespan[max_machine] - makespan[med_machine] - makespan[min_machine]
-                    if jobs[_][0] <= i*q+j*ij:
-                        machines[min_machine].append([jobs[_][0], _+1])
-                        makespan[min_machine] += jobs[_][0]
+                worst_case = 0
+                w_alpha = 0
+                w_beta = 0
+                w_c = 0
+                for iter in range(1000):
+                    machines = [[], [], []]
+                    makespan = [0, 0, 0]
+                    jobs = generate_random_jobs(5000, 1000)
+                    opt = sum([jobs[i][0] for i in range(len(jobs))]) / 3
+                    max_machine = 0
+                    min_machine = 1
+                    med_machine = 2
+                    for _ in range(len(jobs)):
+                        ij = makespan[max_machine] - makespan[med_machine] - makespan[min_machine]
+                        if jobs[_][0] <= i * q + j * ij:
+                            machines[min_machine].append([jobs[_][0], _ + 1])
+                            makespan[min_machine] += jobs[_][0]
 
-                        max_machine = makespan.index(max(makespan))
-                        min_machine = makespan.index(min(makespan))
-                        med_machine = 3 - max_machine - min_machine
-                    else:
-                        machines[max_machine].append([jobs[_][0]/3+2*q, _+1])
-                        makespan[max_machine] += jobs[_][0]/3+2*q
+                            max_machine = makespan.index(max(makespan))
+                            min_machine = makespan.index(min(makespan))
+                            med_machine = 3 - max_machine - min_machine
+                        else:
+                            machines[max_machine].append([jobs[_][0] / 3 + 2 * q, _ + 1])
+                            makespan[max_machine] += jobs[_][0] / 3 + 2 * q
 
-                        machines[min_machine].append([str(makespan[max_machine]-makespan[min_machine]), 0])
-                        machines[med_machine].append([str(makespan[max_machine] - makespan[med_machine]), 0])
+                            machines[min_machine].append([str(makespan[max_machine] - makespan[min_machine]), 0])
+                            machines[med_machine].append([str(makespan[max_machine] - makespan[med_machine]), 0])
 
-                        max_machine = makespan.index(max(makespan))
-                        min_machine = makespan.index(min(makespan))
-                        med_machine = 3 - max_machine - min_machine
+                            max_machine = makespan.index(max(makespan))
+                            min_machine = makespan.index(min(makespan))
+                            med_machine = 3 - max_machine - min_machine
 
-                        makespan[med_machine] = makespan[max_machine]
-                        makespan[min_machine] = makespan[max_machine]
+                            makespan[med_machine] = makespan[max_machine]
+                            makespan[min_machine] = makespan[max_machine]
 
-
-                algo = max(makespan)
-                ratio = algo/opt
-                if ratio < best_ratio:
-                    best_ratio = ratio
-                    alpha = i
-                    beta = j
-                    c = q
+                    algo = max(makespan)
+                    ratio = algo / opt
+                    if ratio > worst_case:
+                        worst_case = ratio
+                        w_alpha = i
+                        w_beta = j
+                        w_c = q
+                if worst_case < best_ratio:
+                    best_ratio = worst_case
+                    alpha = w_alpha
+                    beta = w_beta
+                    c = w_c
                     print(best_ratio, alpha, beta, c)
 
     print(best_ratio, alpha, beta, c)
