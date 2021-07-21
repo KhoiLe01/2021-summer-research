@@ -449,24 +449,32 @@ def algo_finding_simulation_three_machines():
 
     print(best_ratio, alpha, beta, c)
 
-algo_finding_simulation_three_machines()
-# max_approx = 0
-# for c in range(1,100):
-#     # l = generate_random_jobs(1000, 250)
-#     l = find_counter(c)
-#     m = [[],[]]
-#     khoi12c(m, l, c)
-#     # print(len(l))
-#     for i in (m):
-#         print(i)
-#     # avg = max(sum([l[i][0] for i in range(len(l))])/2, max([l[i][0] for i in range(len(l))]))
-#     avg = sum([l[i][0] for i in range(len(l))])/2
-# 
-#     # print(len(l))
-#     # print(makespan(m), avg)
-#     # print(makespan(m)/avg)
-#     if makespan(m)/avg > max_approx:
-#         print(max_approx)
-#         max_approx = makespan(m)/avg
-# 
-# print(max_approx)
+def three_machines_worstcase():
+
+    min_ratio = 10000
+    mina = 0
+    minb = 0
+    for _ in range(1, 1000):
+        for alpha in range (1, 1000, 10):
+            beta = _/1000
+            idle = 0
+            algo = 0
+            opt = 0
+            for i in range (500):
+                first = alpha + beta*idle
+                algo += first
+                opt += first/3
+
+                idle += 2*first
+                second = alpha + beta*idle
+                algo += second/3 + 2
+                opt += second/3
+
+            print(algo/opt)
+            if algo/opt < min_ratio:
+                mina, minb = alpha, beta
+                min_ratio = algo/opt
+
+    print("Min: " + str(min_ratio) + " with alpha = " + str(mina) + " and beta = " + str(minb))
+three_machines_worstcase()
+# algo_finding_simulation_three_machines()
