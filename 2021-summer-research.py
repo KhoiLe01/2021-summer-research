@@ -191,10 +191,10 @@ def LS(machines, jobs):
                 index = i
         insert_job(machines, item[0], index)
         machines[index].append([item[0], index2 + 1])
-    LS_makespan = makespan(machines)
+    # LS_makespan = makespan(machines)
     for i in range(len(machines)):
         machines[i] = machines[i][1:]
-    return LS_makespan
+    # return LS_makespan
 
 
 def SET(machines, jobs, c):
@@ -260,8 +260,6 @@ def main(m, nj):
     for i in range(nj):
         jobs.append([random.randint(1, 10)])
 
-    machines_evan = [[], []]
-
     # machines2 = copy.deepcopy(machines)
     # machines3 = copy.deepcopy(machines)
     # 
@@ -281,15 +279,15 @@ def main(m, nj):
     # for i in machines:
     #     print(i)
 
-    evan_76(machines_evan, jobs, 3)
+    LS(machines, jobs)
     print(jobs)
-    for i in machines_evan:
+    for i in machines:
         print(i)
-    print(makespan(machines_evan)*2/sum([jobs[i][0] for i in range(len(jobs))]))
+    # print(makespan(machines)*2/sum([jobs[i][0] for i in range(len(jobs))]))
 
-    visualization(machines_evan, jobs, "Evan algo")
+    visualization(machines, jobs, "Evan algo")
     
-# main(2, 15)
+# main(5, 20)
 
 def stimulation_2machines():
     maxi = 0
@@ -454,9 +452,11 @@ def three_machines_worstcase():
     min_ratio = 10000
     mina = 0
     minb = 0
-    for _ in range(1, 1000):
+    for _ in range(1, 1001):
         for alpha in range (1, 1000, 10):
             beta = _/1000
+            if beta == 1.001:
+                beta = 1
             idle = 0
             algo = 0
             opt = 0
