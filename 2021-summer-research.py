@@ -236,10 +236,10 @@ def LPT(machines, jobs):
                 index = i
         insert_job(machines, item[0], index)
         machines[index].append([item[0], index2 + 1])
-    LPT_makespan = makespan(machines)
+    # LPT_makespan = makespan(machines)
     for i in range(len(machines)):
         machines[i] = machines[i][1:]
-    return LPT_makespan
+    return machines
 
 def makespan_machines(machine):
     return sum([float(machine[i][0]) for i in range(len(machine))])
@@ -476,5 +476,32 @@ def three_machines_worstcase():
                 min_ratio = algo/opt
 
     print("Min: " + str(min_ratio) + " with alpha = " + str(mina) + " and beta = " + str(minb))
-three_machines_worstcase()
+
+def test_hypo(m, n):
+    machine = [(1-1/m)**i for i in range (m)]
+    job = [i for i in machine]
+    for i in range(n*m):
+        new_job = max(machine)/(1-1/m) - min(machine)
+        job.append(new_job)
+        machine[-1] += new_job
+        machine.sort(reverse=True)
+    rawjob = copy.deepcopy(job)
+    job.sort(reverse = True)
+    return machine[0], rawjob, job
+
+m = 150
+iter = 50
+algo, rawjob, job = test_hypo(m, iter)
+
+job = [[job[i]] for i in range(len(job))]
+machines = LPT([[0] for i in range(m)], job)
+visualization(machines, job, "test")
+print(max([machines[i][0] for i in range(len(machines))]))
+print(rawjob)
+print(rawjob.index(max(rawjob)))
+# for i in range(len(rawjob), 0, -1):
+#     rawjob[i] /= rawjob[i-1]
+# rawjob[0] = 1
+# print(rawjob)
+
 # algo_finding_simulation_three_machines()
