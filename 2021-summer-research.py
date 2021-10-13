@@ -505,9 +505,12 @@ def hypo_visualization(machines, jobs, algo):
         ylabels.append(str(yl))
         yticks.append(yt)
     color = []
+    r, g, b = random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)
     for i in range(len(jobs)):
-        h, s, l = random.random(), 0.5 + random.random() / 2.0, 0.4 + random.random() / 5.0
-        r, g, b = [int(256 * i) for i in colorsys.hls_to_rgb(h, l, s)]
+        # h, s, l = 0, 1, 0.5 + 0.5*i/len(jobs)
+        # r, g, b = [int(256 * i) for i in colorsys.hls_to_rgb(h, l, s)]
+        if (i) % len(machines) == 0:
+            r, g, b = random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)
         c = '#%02x%02x%02x' % (r, g, b)
         color.append(c)
 
@@ -525,7 +528,7 @@ def hypo_visualization(machines, jobs, algo):
         for j in range(len(machines[i])):
             if machines[i][j][1] != 0:
                 gnt.broken_barh([(previous, machines[i][j][0])], ((i + 1) * 10, 9),
-                                facecolors=(color[j]), edgecolor="black")
+                                facecolors=(color[machines[i][j][1] - 1]), edgecolor="black")
                 previous += machines[i][j][0]
             else:
                 if (float(machines[i][j][0])) != 0:
@@ -542,7 +545,7 @@ def hypo_visualization(machines, jobs, algo):
     # mpimg.imsave("{}.png".format(algo), fig)
 
 
-m = 150
+m = 15
 iter = 50
 algo, rawjob, job = test_hypo(m, iter)
 
