@@ -489,16 +489,72 @@ def test_hypo(m, n):
     job.sort(reverse = True)
     return machine[0], rawjob, job
 
+def hypo_visualization(machines, jobs, algo):
+    # Declaring a figure "gnt"
+    fig, gnt = plt.subplots()
+
+    # Setting labels for x-axis and y-axis
+    gnt.set_xlabel('Processing Time')
+    gnt.set_ylabel('Machine')
+
+    yticks = []
+    ylabels = []
+    for i in range(len(machines)):
+        yt = 15 * (i + 1)
+        yl = i + 1
+        ylabels.append(str(yl))
+        yticks.append(yt)
+    color = []
+    for i in range(len(jobs)):
+        h, s, l = random.random(), 0.5 + random.random() / 2.0, 0.4 + random.random() / 5.0
+        r, g, b = [int(256 * i) for i in colorsys.hls_to_rgb(h, l, s)]
+        c = '#%02x%02x%02x' % (r, g, b)
+        color.append(c)
+
+
+    # Setting ticks on y-axis
+    gnt.set_yticks(yticks)
+    # Labelling tickes of y-axis
+    gnt.set_yticklabels(ylabels)
+
+    gnt.grid(True)
+    # Declaring a bar in schedule
+    previous = 0
+
+    for i in range(len(machines)):
+        for j in range(len(machines[i])):
+            if machines[i][j][1] != 0:
+                gnt.broken_barh([(previous, machines[i][j][0])], ((i + 1) * 10, 9),
+                                facecolors=(color[j]), edgecolor="black")
+                previous += machines[i][j][0]
+            else:
+                if (float(machines[i][j][0])) != 0:
+                    gnt.broken_barh([(previous, (float(machines[i][j][0])))], ((i + 1) * 10, 9), facecolors='white',
+                                    edgecolor="black")
+                    previous += (float(machines[i][j][0]))
+        previous = 0
+
+    plt.yticks([])
+    fig.set_size_inches(37, 21)
+    plt.title(algo)
+    plt.show()
+    plt.savefig("{}.png".format(algo))
+    # mpimg.imsave("{}.png".format(algo), fig)
+
+
 m = 150
 iter = 50
 algo, rawjob, job = test_hypo(m, iter)
 
 job = [[job[i]] for i in range(len(job))]
 machines = LPT([[0] for i in range(m)], job)
-visualization(machines, job, "test")
-print(max([machines[i][0] for i in range(len(machines))]))
-print(rawjob)
-print(rawjob.index(max(rawjob)))
+
+hypo_visualization(machines, job, "test")
+print(machines)
+print(len(machines))
+# print(max([machines[i][0] for i in range(len(machines))]))
+# print(rawjob)
+# print(rawjob.index(max(rawjob)))
 # for i in range(len(rawjob), 0, -1):
 #     rawjob[i] /= rawjob[i-1]
 # rawjob[0] = 1
