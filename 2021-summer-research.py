@@ -514,6 +514,7 @@ def hypo_visualization(machines, jobs, algo):
         c = '#%02x%02x%02x' % (r, g, b)
         color.append(c)
 
+    #cycle through the rainbow color wheel then go back to the original starting point on the wheel
 
     # Setting ticks on y-axis
     gnt.set_yticks(yticks)
@@ -545,7 +546,7 @@ def hypo_visualization(machines, jobs, algo):
     # mpimg.imsave("{}.png".format(algo), fig)
 
 
-m = 15
+m = 150
 iter = 50
 algo, rawjob, job = test_hypo(m, iter)
 
